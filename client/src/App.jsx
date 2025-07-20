@@ -2,7 +2,6 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {Toaster} from "@/components/ui/toaster";
 import {TooltipProvider} from "@/components/ui/tooltip";
 import Dashboard from "@/pages/dashboard";
-import NotFound from "@/pages/not-found";
 import {Router, Route} from "wouter";
 
 const queryClient = new QueryClient({

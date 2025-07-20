@@ -1,9 +1,9 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import coinRoutes from './routes/coinRoutes.js';
-import { startCronJob } from './services/cronService.js';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import coinRoutes from "./routes/coinRoutes.js";
+import {startCronJob} from "./services/cronService.js";
 
 dotenv.config();
 
@@ -11,16 +11,21 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+// In your backend
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+  })
+);
 app.use(express.json());
 
 // Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+app.get("/health", (req, res) => {
+  res.json({status: "OK", timestamp: new Date().toISOString()});
 });
 
 // Routes
-app.use('/api', coinRoutes);
+app.use("/api", coinRoutes);
 
 // MongoDB Connection
 const connectDB = async () => {
@@ -28,7 +33,7 @@ const connectDB = async () => {
     const conn = await mongoose.connect(process.env.MONGODB_URI);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error("MongoDB connection error:", error);
     process.exit(1);
   }
 };
@@ -36,18 +41,18 @@ const connectDB = async () => {
 // Start server
 const startServer = async () => {
   await connectDB();
-  
-  app.listen(PORT, '0.0.0.0', () => {
+
+  app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on port ${PORT}`);
-    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
   });
 
   // Start cron job for data collection
   startCronJob();
 };
 
-startServer().catch(error => {
-  console.error('Failed to start server:', error);
+startServer().catch((error) => {
+  console.error("Failed to start server:", error);
   process.exit(1);
 });
 
